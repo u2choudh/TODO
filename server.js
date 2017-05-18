@@ -1,20 +1,12 @@
 var express = require('express');
 var app = express();
 var PORT = process.env.PORT || 3000;
+var bodyParser = require('body-parser');
 
-var todos = [{
-	id: 1,
-	description: 'Make side projects',
-	completed: false
-}, {
-	id: 2,
-	description: 'Apply to WaterlooWorks',
-	completed: false
-}, {
-	id: 3,
-	description: 'Get and interview',
-	completed: true
-}];
+var todos = [];
+var todosId = 1;
+
+app.use(bodyParser.json());
 
 
 app.get('/', function(req, res){
@@ -35,6 +27,14 @@ app.get('/todos/:id', function(req, res){
 	} 
 	res.status(404).send();
 })
+
+app.post('/todos', function(req, res){
+	var body = req.body;
+	body.id = todosId;
+	todosId++;
+	todos.push(body);
+	res.json(todos[0]);
+});
 
 app.listen(PORT, function(){
 	console.log('Listening on ' + PORT);
